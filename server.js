@@ -1,5 +1,9 @@
 var Restify = require("restify");
+var Socket = require("socket.io");
+
 var server = Restify.createServer({name: "Fun Time Server"});
+var io = Socket.listen(server.server);
+
 server.use(Restify.fullResponse()).use(Restify.bodyParser()).use(Restify.queryParser());
 
 server.listen(1337, function(error) {
@@ -14,3 +18,7 @@ server.get(/(\/client)(\/.*)?/, Restify.serveStatic({
   directory: __dirname,
   default: "index.html"
 }));
+
+io.sockets.on('connect', function(socket) {
+  console.log(socket.id);
+});
